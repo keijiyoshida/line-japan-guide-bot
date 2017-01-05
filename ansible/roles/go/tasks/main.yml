@@ -1,0 +1,11 @@
+---
+- name: install Go
+  unarchive:
+    src: "https://storage.googleapis.com/golang/go{{ go_version }}.linux-amd64.tar.gz"
+    dest: "/usr/local/"
+    remote_src: yes
+- name: update PATH
+  become_user: ubuntu
+  lineinfile:
+    dest: $HOME/.bashrc
+    line: "export PATH=$PATH:/usr/local/go/bin"
