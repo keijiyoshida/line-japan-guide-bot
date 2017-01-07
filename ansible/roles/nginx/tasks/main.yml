@@ -17,6 +17,6 @@
     state: absent
 - name: install "nginx" package
   apt:
-    name: nginx
+    name: nginx={{ version }}
     state: present
     update_cache: yes
