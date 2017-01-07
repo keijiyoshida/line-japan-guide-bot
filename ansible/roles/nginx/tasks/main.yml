@@ -20,3 +20,8 @@
     name: nginx={{ version }}
     state: present
     update_cache: yes
+- name: start "nginx" service
+  service:
+    name: nginx
+    state: started
+    enabled: yes
