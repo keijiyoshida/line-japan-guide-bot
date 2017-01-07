@@ -6,3 +6,6 @@
     update_cache: yes
   with_items:
     - language-pack-ja
+- name: set timezone to Asia/Tokyo
+  timezone:
+    name: Asia/Tokyo
