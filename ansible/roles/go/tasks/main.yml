@@ -1,11 +1,37 @@
 ---
-- name: install Go
+- name: download a Go tarball and unarchive it
   unarchive:
     src: "https://storage.googleapis.com/golang/go{{ go_version }}.{{ go_os }}-{{ go_arch }}.tar.gz"
     dest: "/usr/local/"
     remote_src: yes
-- name: update PATH
+- name: create symbolic links to Go binaries
+  file:
+    src: /usr/local/go/bin/{{ item }}
+    dest: /usr/local/bin/{{ item }}
+    state: link
+  with_items:
+    - go
+    - godoc
+    - gofmt
+- name: create Go home directories
+  become_user: ubuntu
+  file:
+    path: $HOME/go/{{ item }}
+    state: directory
+  with_items:
+    - bin
+    - pkg
+    - src/github.com/keijiyoshida
+- name: set "GOPATH" environment variable
   become_user: ubuntu
   lineinfile:
     dest: $HOME/.bashrc
-    line: "export PATH=$PATH:/usr/local/go/bin"
+    state: present
+    insertafter: EOF
+    line: export GOPATH=$HOME/go
+- name: create a symbolic link to "/vagrant" directory
+  become_user: ubuntu
+  file:
+    src: /vagrant
+    dest: $HOME/go/src/github.com/keijiyoshida/line-japan-guide-bot
+    state: link
