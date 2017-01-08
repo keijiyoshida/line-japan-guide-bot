@@ -1,4 +1,8 @@
 {
+  "Bot": {
+    "ChannelSecret": "",
+    "ChannelToken": ""
+  },
   "HTTP": {
     "Addr": ":443",
     "CertFile": "",

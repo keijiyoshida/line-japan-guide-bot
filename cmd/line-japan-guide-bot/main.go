@@ -23,7 +23,12 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	if err := server.Run(conf.HTTP, bot.New()); err != nil {
+	b, err := bot.New(conf.Bot)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	if err := server.Run(conf.HTTP, b); err != nil {
 		log.Fatalln(err)
 	}
 }

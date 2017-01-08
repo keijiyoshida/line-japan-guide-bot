@@ -7,6 +7,7 @@ import (
 
 // Config represents configuration of an application.
 type Config struct {
+	Bot  Bot
 	HTTP HTTP
 }
 
