@@ -2,13 +2,13 @@ package main
 
 import (
 	"log"
-	"net/http"
 
 	"github.com/keijiyoshida/line-japan-guide-bot/bot"
+	"github.com/keijiyoshida/line-japan-guide-bot/server"
 )
 
 func main() {
-	http.Handle("/", bot.New())
-	err := http.ListenAndServe(":80", nil)
-	log.Fatalln(err)
+	if err := server.Run(":80", "", "", bot.New()); err != nil {
+		log.Fatalln(err)
+	}
 }
