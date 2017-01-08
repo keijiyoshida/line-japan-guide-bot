@@ -1,7 +1,7 @@
 {
-  "http": {
-    "addr": ":443",
-    "certFile": "",
-    "keyFile": ""
+  "HTTP": {
+    "Addr": ":443",
+    "CertFile": "",
+    "KeyFile": ""
   }
 }
