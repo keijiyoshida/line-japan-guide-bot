@@ -28,10 +28,17 @@
     dest: $HOME/.bashrc
     state: present
     insertafter: EOF
-    line: export GOPATH=$HOME/go
+    line: export GOPATH={{ go_path }}
 - name: create a symbolic link to "/vagrant" directory
   become_user: ubuntu
   file:
     src: /vagrant
     dest: $HOME/go/src/github.com/keijiyoshida/line-japan-guide-bot
     state: link
+- name: get third party Go packages
+  become_user: ubuntu
+  command: go get {{ item }}
+  with_items:
+    - github.com/line/line-bot-sdk-go/...
+  environment:
+    GOPATH: "{{ go_path }}"

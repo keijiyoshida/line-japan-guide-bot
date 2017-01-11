@@ -26,3 +26,5 @@ _testmain.go
 .vagrant
 *.log
 work
+
+ansible/playbook.retry

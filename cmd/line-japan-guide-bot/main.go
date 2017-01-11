@@ -4,9 +4,9 @@ import (
 	"flag"
 	"log"
 
-	"github.com/keijiyoshida/line-japan-guide-bot/bot"
 	"github.com/keijiyoshida/line-japan-guide-bot/config"
-	"github.com/keijiyoshida/line-japan-guide-bot/server"
+	"github.com/keijiyoshida/line-japan-guide-bot/httpserver"
+	"github.com/line/line-bot-sdk-go/linebot"
 )
 
 // confPath retrieves a configuration file path from
@@ -23,12 +23,9 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	b, err := bot.New(conf.Bot)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	evchan := make(chan *linebot.Event, conf.EvchanBufSize)
 
-	if err := server.Run(conf.HTTP, b); err != nil {
+	if err := httpserver.New(conf, evchan).Run(); err != nil {
 		log.Fatalln(err)
 	}
 }

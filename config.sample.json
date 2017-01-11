@@ -1,9 +1,10 @@
 {
-  "Bot": {
+  "EvchanBufSize": 2048,
+  "LINEClient": {
     "ChannelSecret": "",
     "ChannelToken": ""
   },
-  "HTTP": {
+  "HTTPServer": {
     "Addr": ":443",
     "CertFile": "",
     "KeyFile": ""

@@ -7,8 +7,9 @@ import (
 
 // Config represents configuration of an application.
 type Config struct {
-	Bot  Bot
-	HTTP HTTP
+	EvchanBufSize int
+	LINEClient    LINEClient
+	HTTPServer    HTTPServer
 }
 
 // New parses the JSON file specified by path,
