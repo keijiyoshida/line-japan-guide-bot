@@ -15,12 +15,13 @@ var (
 
 // Text messages
 var (
+	textMessageEat   = "eat"
 	textMessageHelp  = "help"
 	textMessageUsage = "usage"
 )
 
 var usage = `[usage]
-* To find a good place to eat, send a text of "eat" and share your location by using the bottom buttons.
+* To find good places to eat close to your location, send a text of "eat" and share your location by tapping the "Share Location" button at the bottom.
 * To see the usage of Japan Guide (this message), send a text of "usage" or "help".`
 
 // Worker represents a worker.
@@ -50,6 +51,8 @@ func (w *Worker) handleEvent(ev *linebot.Event) error {
 		switch message := ev.Message.(type) {
 		case *linebot.TextMessage:
 			switch message.Text {
+			case textMessageEat:
+				return w.replyEat(ev.ReplyToken)
 			case textMessageHelp, textMessageUsage:
 				return w.showUsage(ev.ReplyToken)
 			}
@@ -73,6 +76,11 @@ func (w *Worker) replyMessage(replyToken string, message string) error {
 		return err
 	}
 	return nil
+}
+
+func (w *Worker) replyEat(replyToken string) error {
+	return w.replyMessage(replyToken, "OK. I'll find good places close to your location to eat close to your location. "+
+		`Please share your location by tapping the "Share Location" button at the bottom.`)
 }
 
 func (w *Worker) handleUnknown(replyToken string) error {
