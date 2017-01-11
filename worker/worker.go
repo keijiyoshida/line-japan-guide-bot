@@ -13,6 +13,16 @@ var (
 	logTypeEvent = "event"
 )
 
+// Text messages
+var (
+	textMessageHelp  = "help"
+	textMessageUsage = "usage"
+)
+
+var usage = `[usage]
+* To find a good place to eat, send a text of "eat" and share your location by using the bottom buttons.
+* To see the usage of Japan Guide (this message), send a text of "usage" or "help".`
+
 // Worker represents a worker.
 type Worker struct {
 	cli    *linebot.Client
@@ -24,8 +34,49 @@ type Worker struct {
 func (w *Worker) Run() {
 	defer w.wg.Done()
 	for ev := range w.evchan {
-		log.JSON(logTypeEvent, ev)
+		if err := w.handleEvent(ev); err != nil {
+			log.Error(err)
+		}
 	}
+}
+
+func (w *Worker) handleEvent(ev *linebot.Event) error {
+	log.JSON(logTypeEvent, ev)
+
+	switch ev.Type {
+	case linebot.EventTypeFollow, linebot.EventTypeJoin:
+		return w.greet(ev.ReplyToken)
+	case linebot.EventTypeMessage:
+		switch message := ev.Message.(type) {
+		case *linebot.TextMessage:
+			switch message.Text {
+			case textMessageHelp, textMessageUsage:
+				return w.showUsage(ev.ReplyToken)
+			}
+		}
+		return w.handleUnknown(ev.ReplyToken)
+	}
+
+	return nil
+}
+
+func (w *Worker) greet(replyToken string) error {
+	return w.replyMessage(replyToken, "Thank you for following Japan Guide and welcome to Japan!\n\n"+usage)
+}
+
+func (w *Worker) showUsage(replyToken string) error {
+	return w.replyMessage(replyToken, usage)
+}
+
+func (w *Worker) replyMessage(replyToken string, message string) error {
+	if _, err := w.cli.ReplyMessage(replyToken, linebot.NewTextMessage(message)).Do(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (w *Worker) handleUnknown(replyToken string) error {
+	return w.replyMessage(replyToken, "I'm sorrry, but I cannot understand your message.")
 }
 
 // New creates a worker and returns it.
