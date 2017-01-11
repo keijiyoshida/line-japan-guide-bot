@@ -1,5 +1,6 @@
 {
   "EvchanBufSize": 2048,
+  "NumWorker": 2,
   "LINEClient": {
     "ChannelSecret": "",
     "ChannelToken": ""

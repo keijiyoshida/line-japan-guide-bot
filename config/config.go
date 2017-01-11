@@ -8,6 +8,7 @@ import (
 // Config represents configuration of an application.
 type Config struct {
 	EvchanBufSize int
+	NumWorker     int
 	LINEClient    LINEClient
 	HTTPServer    HTTPServer
 }

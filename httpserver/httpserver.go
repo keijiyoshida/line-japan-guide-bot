@@ -17,14 +17,14 @@ type HTTPServer struct {
 	evchan        chan<- *linebot.Event
 }
 
-func (hs *HTTPServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (hs *HTTPServer) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	events, err := linebot.ParseRequest(hs.channelSecret, r)
 	if err != nil {
 		log.Error(err)
 		if err == linebot.ErrInvalidSignature {
-			w.WriteHeader(http.StatusBadRequest)
+			rw.WriteHeader(http.StatusBadRequest)
 		} else {
-			w.WriteHeader(http.StatusInternalServerError)
+			rw.WriteHeader(http.StatusInternalServerError)
 		}
 		return
 	}
@@ -40,6 +40,7 @@ func (hs *HTTPServer) Run() error {
 	return http.ListenAndServeTLS(hs.addr, hs.certFile, hs.keyFile, nil)
 }
 
+// New creates an HTTP server and returns it.
 func New(conf *config.Config, evchan chan<- *linebot.Event) *HTTPServer {
 	return &HTTPServer{
 		conf.HTTPServer.Addr,

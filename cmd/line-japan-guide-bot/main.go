@@ -3,9 +3,11 @@ package main
 import (
 	"flag"
 	"log"
+	"sync"
 
 	"github.com/keijiyoshida/line-japan-guide-bot/config"
 	"github.com/keijiyoshida/line-japan-guide-bot/httpserver"
+	"github.com/keijiyoshida/line-japan-guide-bot/worker"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
 
@@ -24,6 +26,17 @@ func main() {
 	}
 
 	evchan := make(chan *linebot.Event, conf.EvchanBufSize)
+
+	wg := new(sync.WaitGroup)
+	wg.Add(conf.NumWorker)
+
+	for i := 0; i < conf.NumWorker; i++ {
+		w, err := worker.New(conf.LINEClient, wg, evchan)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		go w.Run()
+	}
 
 	if err := httpserver.New(conf, evchan).Run(); err != nil {
 		log.Fatalln(err)
