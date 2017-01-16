@@ -28,3 +28,4 @@ _testmain.go
 work
 
 ansible/playbook.retry
+ansible/src/

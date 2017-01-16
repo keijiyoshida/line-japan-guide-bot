@@ -1,0 +1,5 @@
+---
+jdk_version: 8
+jdk_update: 112
+jdk_os: linux
+jdk_arch: x64

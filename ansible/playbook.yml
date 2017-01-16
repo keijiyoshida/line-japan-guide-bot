@@ -7,3 +7,5 @@
   roles:
     - common
     - go
+    - jdk
+    - hbase

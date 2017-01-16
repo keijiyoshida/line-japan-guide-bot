@@ -1,0 +1,20 @@
+---
+- name: download a JDK tarball and unarchive it
+  unarchive:
+    src: src/jdk-{{ jdk_version }}u{{ jdk_update }}-{{ jdk_os }}-{{ jdk_arch }}.tar.gz
+    dest: /usr/local
+- name: create symbolic links to JDK binaries
+  file:
+    src: /usr/local/jdk1.{{ jdk_version }}.0_{{ jdk_update }}/bin/{{ item }}
+    dest: /usr/local/bin/{{ item }}
+    state: link
+  with_items:
+    - java
+    - javac
+- name: set "JAVA_HOME" environment variable
+  become_user: ubuntu
+  lineinfile:
+    dest: $HOME/.bashrc
+    state: present
+    insertafter: EOF
+    line: export JAVA_HOME=/usr/local/jdk1.{{ jdk_version }}.0_{{ jdk_update }}

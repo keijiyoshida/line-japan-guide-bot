@@ -1,0 +1,16 @@
+---
+- name: download an HBase tarball and unarchive it
+  unarchive:
+    src: http://ftp.riken.jp/net/apache/hbase/{{ hbase_version }}/hbase-{{ hbase_version }}-bin.tar.gz
+    dest: /usr/local
+    remote_src: yes
+- name: deploy configuration files
+  template:
+    src: "{{ item }}.j2"
+    dest: /usr/local/hbase-{{ hbase_version }}/conf/{{ item }}
+  with_items:
+    - hbase-site.xml
+- name: start HBase
+  shell: /usr/local/hbase-{{ hbase_version }}/bin/stop-hbase.sh
+  environment:
+    JAVA_HOME: /usr/local/jdk1.{{ jdk_version }}.0_{{ jdk_update }}
